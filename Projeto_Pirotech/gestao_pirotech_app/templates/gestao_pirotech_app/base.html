@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Pirotech{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "pirotech-preto": "#111827", // Cor primaria
+              "pirotech-roxo": {
+                // Cor secundaria, mas com tres tipos de variaçoes
+                default: "#6d28d9",
+                light: "#8b5cf6",
+                dark: "#5b21b6",
+              },
+              "pirotech-branco": "#f9fafb", //Cor terciaria
+              "pirotech-cinza": "#a78bfa", //Cor pra contraste no branco
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-pirotech-preto text-pirotech-branco">
+    <!-- Tentar fazer uma boa convencao de usar as cores padronizadas -->
+    <header>
+      <nav class="bg-pirotech-cinza p-4">
+        <h1 class="text-xl text-pirotech-roxo-dark">Pirotech Gestão</h1>
+      </nav>
+    </header>
+
+    <main class="container mx-auto mt-8 p-4">
+      {% block content %} {% endblock %}
+    </main>
+
+    <footer class="text-center py-4 mt-8 border-t border-pirotech-cinza">
+      <p>© 2025 Pirotech</p>
+    </footer>
+  </body>
+</html>
