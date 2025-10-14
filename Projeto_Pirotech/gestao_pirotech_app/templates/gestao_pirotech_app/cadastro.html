@@ -1,3 +1,10 @@
-{% extends 'gestao_pirotech_app/base.html' %} {% block content %}
-<h1>Hello world</h1>
-{% endblock %}
+{% extends 'gestao_pirotech_app/layouts/public_layout.html' %}
+<!--Separação-->
+{% block title %}Cadastro - Pirotech {% endblock title %}
+<!--Separação-->
+{% block main_content %}
+<form method="POST" action="">
+  {% csrf_token %} {{form.as_p}}
+  <input type="submit" name="Create User" />
+</form>
+{% endblock main_content %}
