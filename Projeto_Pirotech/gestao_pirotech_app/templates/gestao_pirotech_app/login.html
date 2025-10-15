@@ -3,13 +3,10 @@
 {% block title %}Cadastro - Pirotech {% endblock title %}
 <!--Separação-->
 {% block main_content %}
-<h2 class="text-2xl font-bold text-center text-pirotech-preto mb-6">
-  Crie sua Conta
-</h2>
-
+<h2 class="text-2xl font-bold text-center text-pirotech-preto mb-6">Login</h2>
 <form
   method="POST"
-  action="{% url 'gestao-cadastro' %}"
+  action="{% url 'gestao-login' %}"
   class="flex flex-col items-center gap-y-3"
 >
   {% csrf_token %}
@@ -21,21 +18,7 @@
       type="text"
       id="username"
       placeholder="Username..."
-      required
       name="username"
-      class="block w-[250px] h-[35px] px-3 py-2 rounded-lg shadow-sm text-pirotech-preto border border-pirotech-cinza focus:ring-2 focus:ring-pirotech-roxo-default focus:border-pirotech-roxo-default placeholder:text-pirotech-cinza outline-none transition-all duration-200 ease-in-out"
-    />
-  </div>
-  <div>
-    <label for="email" class="block text-sm font-medium text-pirotech-preto"
-      >Email</label
-    >
-    <input
-      type="email"
-      id="email"
-      placeholder="Email..."
-      required
-      name="email"
       class="block w-[250px] h-[35px] px-3 py-2 rounded-lg shadow-sm text-pirotech-preto border border-pirotech-cinza focus:ring-2 focus:ring-pirotech-roxo-default focus:border-pirotech-roxo-default placeholder:text-pirotech-cinza outline-none transition-all duration-200 ease-in-out"
     />
   </div>
@@ -47,23 +30,7 @@
       type="password"
       id="senha"
       placeholder="Senha..."
-      required
       name="senha"
-      class="block w-[250px] h-[35px] px-3 py-2 rounded-lg shadow-sm text-pirotech-preto border border-pirotech-cinza focus:ring-2 focus:ring-pirotech-roxo-default focus:border-pirotech-roxo-default placeholder:text-pirotech-cinza outline-none transition-all duration-200 ease-in-out"
-    />
-  </div>
-  <div>
-    <label
-      for="confirmar_senha"
-      class="block text-sm font-medium text-pirotech-preto"
-      >Confirme a senha</label
-    >
-    <input
-      type="password"
-      id="confirmar_senha"
-      placeholder="Confirmar a senha..."
-      required
-      name="confirmar_senha"
       class="block w-[250px] h-[35px] px-3 py-2 rounded-lg shadow-sm text-pirotech-preto border border-pirotech-cinza focus:ring-2 focus:ring-pirotech-roxo-default focus:border-pirotech-roxo-default placeholder:text-pirotech-cinza outline-none transition-all duration-200 ease-in-out"
     />
   </div>
@@ -76,32 +43,32 @@
       <span
         class="w-[200px] relative px-5 py-2.5 transition-all ease-in duration-75 bg-pirotech-branco dark:bg-pirotech-preto rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent"
       >
-        Cadastrar
+        Entrar
       </span>
     </button>
   </div>
-</form>
-{% if messages %}
-<div>
-  {% for message in messages %}
-  <div
-    class="p-4 mb-4 text-sm {% if message.tags == 'error' %}text-red-800 bg-red-100{% else %}text-green-800 bg-green-100{% endif %} rounded-lg"
-    role="alert"
-  >
-    {{ message }}
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
-<div class="text-black flex justify-center pt-5">
-  <p>
-    Ja possui uma conta?
-    <a
-      href="{% url 'gestao-login' %}"
-      class="font-semibold text-pirotech-roxo-dark hover:text-pirotech-roxo-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pirotech-roxo-default"
+  {% if messages %}
+  <div>
+    {% for message in messages %}
+    <div
+      class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100"
+      role="alert"
     >
-      Faça login aqui
-    </a>
-  </p>
-</div>
-{% endblock main_content %}
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="text-black flex justify-center pt-5">
+    <p>
+      Ainda não tem uma conta?
+      <a
+        href="{% url 'gestao-cadastro' %}"
+        class="font-semibold text-pirotech-roxo-dark hover:text-pirotech-roxo-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pirotech-roxo-default"
+      >
+        Cadastre-se aqui
+      </a>
+    </p>
+  </div>
+  {% endblock main_content %}
+</form>
