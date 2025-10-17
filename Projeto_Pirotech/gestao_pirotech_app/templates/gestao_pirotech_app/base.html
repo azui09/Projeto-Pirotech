@@ -5,7 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Pirotech{% endblock title %}</title>
-
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -35,11 +38,93 @@
   <!-- Tentar fazer uma boa convencao de usar as cores padronizadas -->
   {% block body_content %}
   <body class="bg-pirotech-preto text-pirotech-branco">
-    <header>
-      <nav class="bg-pirotech-cinza p-4">
-        <h1 class="text-xl text-pirotech-roxo-dark">Pirotech Gestão</h1>
-      </nav>
-    </header>
+    <div class="flex">
+      <aside
+        id="sidebar"
+        class="w-64 h-screen bg-pirotech-preto p-4 flex flex-col fixed top-0 left-0 border-r border-pirotech-cinza/20 transition-all ease-in-out"
+      >
+        <div class="flex items-center justify-between mb-8">
+          <p
+            id="sidebar-title"
+            class="text-xl font-bold text-pirotech-branco transition-opacity duration-200 whitespace-nowrap"
+          >
+            Gestão Pirotech
+          </p>
+          <button
+            id="sidebar-toggle"
+            class="flex items-center gap-x-4 p-3 rounded-md text-pirotech-branco hover:bg-pirotech-roxo-default transition-colors"
+          >
+            <span
+              id="sidebar-toggle-icon"
+              class="material-symbols-rounded transition-transform duration-300"
+            >
+              chevron_left
+            </span>
+          </button>
+        </div>
+
+        <nav class="flex-grow">
+          <ul class="space-y-2">
+            <li class="flex flex-col items-center justify-center gap-y-5 pb-5">
+              <p id="sidebar-text" class="whitespace-nowrap font-bold">
+                Nome: {{user.username}}
+              </p>
+              <p id="sidebar-text" class="whitespace-nowrap font-bold">
+                Email: {{user.email}}
+              </p>
+              <p
+                id="sidebar-text"
+                class="whitespace-nowrap font-bold capitalize"
+              >
+                Cargo: {{tipo_cargo}}
+              </p>
+            </li>
+            <li>
+              <a
+                href="{% url 'gestao-dashboard' %}"
+                class="flex items-center gap-x-4 p-3 rounded-md text-pirotech-branco hover:bg-pirotech-roxo-default transition-colors"
+              >
+                <span class="material-symbols-rounded"> dashboard </span>
+                <span id="sidebar-text" class="whitespace-nowrap"
+                  >Dashboard</span
+                >
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'gestao-vendas' %}"
+                class="flex items-center gap-x-4 p-3 rounded-md text-pirotech-branco hover:bg-pirotech-roxo-default transition-colors"
+              >
+                <span class="material-symbols-rounded"> point_of_sale </span>
+                <span id="sidebar-text" class="whitespace-nowrap">Vendas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="{% url 'gestao-estoque' %}"
+                class="flex items-center gap-x-4 p-3 rounded-md text-pirotech-branco hover:bg-pirotech-roxo-default transition-colors"
+              >
+                <span class="material-symbols-rounded"> inventory_2 </span>
+                <span id="sidebar-text" class="whitespace-nowrap">Estoque</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div>
+          <form action="{% url 'gestao-logout' %}" method="POST">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="flex w-full items-center gap-x-4 p-3 rounded-md text-pirotech-branco hover:bg-red-800/50 transition-colors"
+            >
+              <span class="material-symbols-rounded"> logout </span>
+              <span id="sidebar-text" class="whitespace-nowrap">Sair</span>
+            </button>
+          </form>
+        </div>
+      </aside>
+    </div>
 
     <main class="container mx-auto mt-8 p-4">
       {% block content %} {% endblock content %}
@@ -48,6 +133,7 @@
     <footer class="text-center py-4 mt-8 border-t border-pirotech-cinza">
       <p>© 2025 Pirotech</p>
     </footer>
+    <script src="{% static 'gestao_pirotech_app/js/script.js' %}"></script>
   </body>
   {% endblock body_content %}
 </html>
