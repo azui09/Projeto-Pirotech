@@ -1,7 +1,208 @@
-{% extends "gestao_pirotech_app/base.html" %} {% load static %}
-<!--Separação-->
-{% block title %}Gerenciar Estoque - Pirotech{% endblock title %}
-<!--Separação-->
+{% extends 'gestao_pirotech_app/base.html' %} 
+{% block title %}Gerenciar Estoque - Pirotech{% endblock title %} 
+
 {% block content %}
-<h1>Hello World</h1>
+<h1 class="text-3xl font-bold mb-4 text-center">Gerenciar Estoque</h1>
+
+{% if messages %} 
+    {% for message in messages %}
+    <div
+      class="p-4 mb-4 text-sm {% if message.tags == 'error' %}text-red-800 bg-red-100{% else %}text-green-800 bg-green-100{% endif %} rounded-lg"
+    >
+      {{ message }}
+    </div>
+    {% endfor %} 
+{% endif %}
+{% if user.perfil.cargo == 'vendedor' %}
+<div
+  class="bg-pirotech-preto p-6 rounded-lg border border-pirotech-cinza/20 mb-8"
+>
+  <h2 class="text-xl font-semibold mb-4 border-b border-pirotech-cinza/20 pb-2">
+    Adicionar Novo Produto
+  </h2>
+  <form
+    method="POST"
+    action="{% url 'gestao-estoque' %}"
+    autocomplete="off"
+  >
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create" />
+    <div class="grid grid-cols-1 gap-4 items-end">
+      <div>
+        <label
+          for="{{ form_criacao.nome.id_for_label }}"
+          class="font-semibold"
+          >Nome do Produto</label
+        >
+        <input
+          type="text"
+          name="nome"
+          required
+          id="{{ form_criacao.nome.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        />
+      </div>
+      <div>
+        <label
+          for="{{ form_criacao.preco.id_for_label }}"
+          class="font-semibold"
+          >Preço (R$)</label
+        >
+        <input
+          type="number"
+          step="0.01"
+          name="preco"
+          required
+          id="{{ form_criacao.preco.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        />
+      </div>
+      <div>
+        <label
+          for="{{ form_criacao.preco_de_custo.id_for_label }}"
+          class="font-semibold"
+          >Custo (R$)</label
+        >
+        <input
+          type="number"
+          step="0.01"
+          name="preco_de_custo"
+          required
+          id="{{ form_criacao.preco_de_custo.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        />
+      </div>
+      <div>
+        <label
+          for="{{ form_criacao.quantidade.id_for_label }}"
+          class="font-semibold"
+          >Qtd.</label
+        >
+        <input
+          type="number"
+          name="quantidade"
+          required
+          id="{{ form_criacao.quantidade.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        />
+      </div>
+      <button
+        type="submit"
+        class="bg-pirotech-roxo-default hover:bg-pirotech-roxo-dark text-white font-bold py-2 px-4 rounded h-10"
+      >
+        Registrar
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<div
+  class="bg-pirotech-preto p-6 rounded-lg border border-pirotech-cinza/20"
+>
+  <h3 class="text-xl font-bold border-b border-pirotech-cinza/20 pb-2 mb-4">
+    Seu Estoque
+  </h3>
+  <table class="w-full text-left">
+    <thead
+      class="bg-pirotech-preto/50 border-b border-pirotech-cinza/20"
+    >
+      <tr>
+        <th class="p-2">Nome</th>
+        <th class="p-2">Preço Venda</th>
+        <th class="p-2">Preço Custo</th>
+        <th class="p-2">Quantidade</th>
+        {% if user.is_superuser %}
+          <th class="p-2">Vendedor</th>
+        {% endif %}
+        <th class="p-2 text-center">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for produto in produtos %}
+      <tr class="border-b border-pirotech-cinza/10">
+        <form
+          action="{% url 'gestao-estoque' %}"
+          method="POST"
+          autocomplete="off"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="action" value="update" />
+          <input type="hidden" name="produto_id" value="{{ produto.id }}" />
+
+          <td class="p-2">
+            <input
+              type="text"
+              name="nome"
+              value="{{ produto.nome }}"
+              class="w-full border rounded p-1 bg-pirotech-preto border-pirotech-cinza/30"
+            />
+          </td>
+          <td class="p-2">
+            <input
+              type="number"
+              step="0.01"
+              name="preco"
+              value="{{ produto.preco|stringformat:'.2f' }}"
+              class="w-full border rounded p-1 bg-pirotech-preto border-pirotech-cinza/30"
+            />
+          </td>
+          <td class="p-2">
+            <input
+              type="number"
+              step="0.01"
+              name="preco_de_custo"
+              value="{{ produto.preco_de_custo|stringformat:'.2f' }}"
+              class="w-full border rounded p-1 bg-pirotech-preto border-pirotech-cinza/30"
+            />
+          </td>
+          <td class="p-2">
+            <input
+              type="number"
+              name="quantidade"
+              value="{{ produto.quantidade }}"
+              class="w-[100px] border rounded p-1 bg-pirotech-preto border-pirotech-cinza/30"
+            />
+          </td>
+          {% if user.is_superuser %}
+            <td class="p-2 text-sm text-pirotech-cinza">{{ produto.usuario.username }}</td>
+          {% endif %}
+          <td class="p-2 text-center whitespace-nowrap">
+            <button
+              type="submit"
+              class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded"
+            >
+              Atualizar
+            </button>
+        </form>
+        <form
+          action="{% url 'gestao-estoque' %}"
+          method="POST"
+          class="inline"
+        >
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete" />
+          <input type="hidden" name="produto_id" value="{{ produto.id }}" />
+          <button
+            type="submit"
+            class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+          >
+            Deletar
+          </button>
+        </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td
+          colspan="{% if user.is_superuser %}6{% else %}5{% endif %}"
+          class="text-center p-4 text-pirotech-cinza"
+        >
+          Você não tem produtos cadastrados.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock content %}
