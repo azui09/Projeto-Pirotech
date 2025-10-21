@@ -1,3 +1,121 @@
 {% extends "gestao_pirotech_app/base.html" %} {% load static %}
 <!--Separação-->
 {% block title %}Gerenciar Vendas - Pirotech{% endblock title %}
+<!--Separação-->
+{% block content %}
+<h1 class="text-3xl font-bold mb-4 text-center">
+  {% if user.perfil.cargo == 'vendedor' %}Registrar Vendas{% else %}Vendas
+  Registradas{% endif %}
+</h1>
+
+{% if messages %} {% for message in messages %}
+<div
+  class="p-4 mb-4 text-sm {% if message.tags == 'error' %}text-red-800 bg-red-100{% else %}text-green-800 bg-green-100{% endif %} rounded-lg"
+>
+  {{ message }}
+</div>
+{% endfor %} {% endif %}
+<!--Separação-->
+{% if user.perfil.cargo == 'vendedor' %}
+<div
+  class="bg-pirotech-preto p-6 rounded-lg border border-pirotech-cinza/20 mb-8"
+>
+  <h2
+    class="text-xl font-semibold p-6 rounded-lg border border-pirotech-cinza/20 text-center"
+  >
+    Registrar Nova Venda
+  </h2>
+  <form method="POST" action="{% url 'gestao-vendas' %}" autocomplete="off">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="create" />
+    <div class="grid grid-cols-1 gap-4 items-end">
+      <div>
+        <label
+          for="{{ form_criacao.produto.id_for_label }}"
+          class="font-semibold"
+          >Produto</label
+        >
+        <select
+          name="produto"
+          required
+          id="{{ form_criacao.produto.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        >
+          <option value="">Selecione um produto</option>
+          {% for p in form_criacao.produto.field.queryset %}
+          <option value="{{ p.id }}">
+            {{ p.nome }} ({{ p.quantidade }} em estoque)
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label
+          for="{{ form_criacao.quantidade_vendida.id_for_label }}"
+          class="font-semibold"
+          >Quantidade</label
+        >
+        <input
+          type="number"
+          name="quantidade_vendida"
+          required
+          id="{{ form_criacao.quantidade_vendida.id_for_label }}"
+          class="w-full border rounded p-2 mt-1 bg-pirotech-preto border-pirotech-cinza/30 focus:border-pirotech-roxo focus:ring-pirotech-roxo"
+        />
+      </div>
+      <button
+        type="submit"
+        class="bg-pirotech-roxo-default hover:bg-pirotech-roxo-dark text-white font-bold py-2 px-4 rounded h-10"
+      >
+        Registrar Venda
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+<div class="bg-pirotech-preto p-6 rounded-lg border border-pirotech-cinza/20">
+  <h3 class="text-xl font-bold border-b border-pirotech-cinza/20 pb-2 mb-4">
+    Histórico de Vendas
+  </h3>
+  <table class="w-full text-left">
+    <thead class="bg-pirotech-preto/50 border-b border-pirotech-cinza/20">
+      <tr>
+        <th class="p-2">Produto</th>
+        <th class="p-2">Qtd. Vendida</th>
+        <th class="p-2">Receita</th>
+        <th class="p-2">Lucro</th>
+        {% if user.is_superuser %}
+        <th class="p-2">Vendedor</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for venda in vendas %}
+      <tr class="border-b border-pirotech-cinza/10">
+        <td class="p-2">{{ venda.produto.nome }}</td>
+        <td class="p-2">{{ venda.quantidade_vendida }}</td>
+        <td class="p-2">{{ venda.receita_total|stringformat:'.2f' }}</td>
+        <td class="p-2 text-green-400">
+          {{ venda.lucro_total|stringformat:'.2f' }}
+        </td>
+        {% if user.is_superuser %}
+        <td class="p-2 text-sm text-pirotech-cinza">
+          {{ venda.usuario.username }}
+        </td>
+        {% endif %}
+      </tr>
+      {% empty %}
+      <tr>
+        <td
+          colspan="{% if user.is_superuser %}5{% else %}4{% endif %}"
+          class="text-center p-4 text-pirotech-cinza"
+        >
+          Nenhuma Venda Registrada
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
