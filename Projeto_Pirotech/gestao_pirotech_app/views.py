@@ -12,6 +12,7 @@ def auxiliar_dados_por_usuario(request, model):
     else:
         return model.objects.filter(usuario = request.user)
 
+
 def cadastro(request):
     if request.method == 'GET':
         return render(request, "gestao_pirotech_app/cadastro.html")
@@ -23,19 +24,25 @@ def cadastro(request):
 
         if senha != confirmar_senha:
             messages.error(request, 'As senhas não coincidem!')
-            return redirect('getsao-cadastro')
+            return redirect('gestao-cadastro')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Este nome de usuário já está em uso!')
             return redirect('gestao-cadastro')
 
-        user = User.objects.create_user(username=username, email=email, password=senha)
 
+        user = User.objects.create(
+            username=username, 
+            email=email, 
+            password=senha
+        )
+
+         
         Usuarios.objects.create(
             user=user,
             cargo='vendedor',
         )
-        
+
         return redirect('gestao-login')
     
 def login(request):
@@ -167,6 +174,6 @@ def vendas(request):
 
 def fazer_logout(request):
     if request.method == 'POST':
-        logout(request)
+        auth_logout(request) 
         return redirect('gestao-login')
     return redirect('gestao-login')
