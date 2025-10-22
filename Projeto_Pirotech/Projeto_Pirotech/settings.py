@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -73,16 +75,26 @@ WSGI_APPLICATION = 'Projeto_Pirotech.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Pirotech',
-        'HOST': 'localhost',
-        'USER': 'postgres',
-        'PASSWORD': 'Gotheusql2@',
-        'PORT': '5432'
+
+
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'Pirotech',
+            'HOST': 'localhost',
+            'USER': 'postgres',
+            'PASSWORD': 'Gotheusql2@',
+            'PORT': '5432'
+        }
+    }
 
 
 # Password validation
@@ -115,6 +127,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
