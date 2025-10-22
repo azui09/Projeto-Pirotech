@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from .models import Usuarios, Produto, Vendas
 from django.contrib.auth.decorators import login_required
 from .forms import VendaForm, ProdutoForm
+import pandas as pd
+import plotly.express as px
+import plotly.offline as op
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField
 
 def auxiliar_dados_por_usuario(request, model):
     if request.user.is_superuser:
@@ -116,7 +120,7 @@ def estoque(request):
             else:
                 messages.error(request, 'Ação não permitida')
         
-        return redirect('gestao-login')
+        return redirect('gestao-estoque')
     
     else:
         produtos_do_usuario = auxiliar_dados_por_usuario(request, Produto).order_by('nome')
