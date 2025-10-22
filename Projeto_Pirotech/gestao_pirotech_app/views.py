@@ -35,7 +35,7 @@ def cadastro(request):
             return redirect('gestao-cadastro')
 
 
-        user = User.objects.create(
+        user = User.objects.create_user(
             username=username, 
             email=email, 
             password=senha
@@ -178,6 +178,6 @@ def vendas(request):
 
 def fazer_logout(request):
     if request.method == 'POST':
-        auth_logout(request) 
+        logout(request) 
         return redirect('gestao-login')
     return redirect('gestao-login')
