@@ -1,3 +1,28 @@
 {% extends "gestao_pirotech_app/base.html" %} {% load static %}
 <!--Separação-->
 {% block title %}Visualizar Dashboards - Pirotech{% endblock title %}
+<!--Separação-->
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-center">Dashboard</h1>
+<div class="grid grid-cols-4 gap-6">
+  {% for nome, valor in kpis.items %}
+  <div class="bg-pirotech-preto p-6 rounded-lg border border-pirotech-cinza/20">
+    <h3 class="text-sm font-medium text-pirotech-cinza">{{ nome }}</h3>
+    <p class="mt-1 text-3xl font-semibold">
+      {% if 'Receita' in nome or 'Lucro' in nome %} R$ {{ valor|floatformat:2 }}
+      {% else %} {{ valor }} {% endif %}
+    </p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="grid grid-cols-1 gap-6 pt-6">
+  {% for grafico in graficos %}
+  <div class="bg-pirotech-preto p-4 rounded-lg border border-pirotech-cinza/20">
+    {{ grafico|safe }}
+  </div>
+  {% empty %}
+  <p>Nenhum Gráfico para exibir</p>
+  {% endfor %}
+</div>
+{% endblock content %}
