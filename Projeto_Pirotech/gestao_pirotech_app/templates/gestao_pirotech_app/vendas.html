@@ -44,7 +44,8 @@
           <option value="">Selecione um produto</option>
           {% for p in form_criacao.produto.field.queryset %}
           <option value="{{ p.id }}">
-            {{ p.nome }} ({{ p.quantidade }} em estoque)
+            {{ p.animal }}, {{ p.tipo }}, {{ p.peso }}kg ({{ p.quantidade }} em
+            estoque)
           </option>
           {% endfor %}
         </select>
@@ -93,7 +94,11 @@
     <tbody>
       {% for venda in vendas %}
       <tr class="border-b border-pirotech-cinza/10">
-        <td class="p-2">{{ venda.produto.nome }}</td>
+        <td>
+          {{ venda.produto.animal }}, {{ venda.produto.tipo }},
+          <!---->
+          {{ venda.produto.peso }}kg
+        </td>
         <td class="p-2">{{ venda.quantidade_vendida }}</td>
         <td class="p-2">{{ venda.receita_total|stringformat:'.2f' }}</td>
         <td class="p-2 text-green-400">
