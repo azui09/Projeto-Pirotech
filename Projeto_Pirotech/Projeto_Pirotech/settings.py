@@ -88,10 +88,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'Pirotech',
+            'NAME': 'base',
             'HOST': 'localhost',
             'USER': 'postgres',
-            'PASSWORD': 'Gotheusql2@',
+            'PASSWORD': '2099',
             'PORT': '5432'
         }
     }
